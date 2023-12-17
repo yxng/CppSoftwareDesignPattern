@@ -15,7 +15,6 @@ public:
 	// system state actions
 	void GoStandby();
 	void GoFault();
-	void GoSeedOn();
 
 };
 
@@ -31,10 +30,6 @@ public:
 
 	virtual void DoFault(System* sys) {
 		cout << "   already Fault\n";
-	}
-
-	virtual void DoSeedOn(System* sys) {
-		cout << "   already Seedon\n";
 	}
 };
 
@@ -53,7 +48,7 @@ public:
 	// virtual functions to be overriden by derived child classes
 	void DoStandby(System* sys);
 	void DoFault(System* sys);
-	void DoSeedOn(System* sys);
+
 };
 
 class Fault : public State {
@@ -70,25 +65,8 @@ public:
 	// pure virtual functions to be overriden by derived child classes
 	void DoStandby(System* sys) override;
 	void DoFault(System* sys) override;
-	void DoSeedOn(System* sys) override;
 };
 
-class SeedOn : public State {
-public:
-	SeedOn()
-	{
-		cout << "   SeedOn-ctor ";
-	};
-	~SeedOn()
-	{
-		cout << "   dtor-SeedOn\n";
-	};
-
-	// pure virtual functions to be overriden by derived child classes
-	void DoStandby(System* sys) override;
-	void DoFault(System* sys) override;
-	void DoSeedOn(System* sys) override;
-};
 
 // class member functions 
 void Standby::DoStandby(System* s)
@@ -101,13 +79,6 @@ void Standby::DoFault(System* s)
 	cout << "   going from Standby to Fault";
 	s->SetCurrentState(new Fault()); 
 	delete this; 
-}
-
-void Standby::DoSeedOn(System* s)
-{
-	cout << "   going from Standby to SeedOn";
-	s->SetCurrentState(new SeedOn());
-	delete this;
 }
 
 // class member functions 
@@ -123,28 +94,6 @@ void Fault::DoFault(System* s)
 	cout << "   already Fault"; 
 }
 
-void Fault::DoSeedOn(System* s)
-{
-	cout << "   Not allowed";
-}
-
-// class member functions 
-void SeedOn::DoStandby(System* s)
-{
-	cout << "   going from SeedOn to Standby";
-	s->SetCurrentState(new Standby());
-	delete this;
-}
-
-void SeedOn::DoFault(System* s)
-{
-	cout << "   Not allowed";
-}
-
-void SeedOn::DoSeedOn(System* s)
-{
-	cout << "   already SeedOn";  
-}
 
 // constructor 
 System::System()
@@ -160,11 +109,6 @@ void System::GoFault() {
 void System::GoStandby() {
 	currentState->DoStandby(this);	// passed this System object into state
 }
-
-void System::GoSeedOn() {
-	currentState->DoSeedOn(this);	// passed this System object into state
-}
-
 
 int main() {
 	cout << "Software Design Pattern - State Behaviour\n"; 
@@ -182,8 +126,6 @@ int main() {
 			sys.GoFault();
 		else if (input.compare("s") == 0)
 			sys.GoStandby();
-		else if (input.compare("f") == 0)
-			sys.GoSeedOn();
 		else if (input.compare("q") == 0)
 			isQuit = true; 
 	}
