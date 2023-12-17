@@ -50,7 +50,7 @@ public:
 		cout << "   dtor-Standby\n";
 	};
 
-	// pure virtual functions to be overriden by derived child classes
+	// virtual functions to be overriden by derived child classes
 	void DoStandby(System* sys);
 	void DoFault(System* sys);
 	void DoSeedOn(System* sys);
